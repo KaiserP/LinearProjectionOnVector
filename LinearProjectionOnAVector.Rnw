@@ -1,0 +1,168 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+\begin{document}
+
+\title{Lineare Projektionen auf einen Vektor}
+\author{Pascal Kaiser}
+
+\maketitle
+
+\SweaveOpts{concordance=TRUE}
+
+\section{Linear Projektionen auf einen Vektor}
+
+Das Ziel hier ist es, die Vektoren $b$, $c$, $d$ und $e$ auf den Vektor $a$ zu projezieren, wie in Fig. \ref{fig1.1} dargestellt ist. Dies kann über das Standardskalarprodukt im $\mathbb{R}^2$ erreicht werden.\newline
+
+$
+a = \begin{pmatrix} 1 \\ 1 \end{pmatrix} 
+b = \begin{pmatrix} 1 \\ 3 \end{pmatrix}
+c = \begin{pmatrix} -1 \\ 3 \end{pmatrix}
+d = \begin{pmatrix} -1.5 \\ 1 \end{pmatrix}
+e = \begin{pmatrix} -0.5 \\ -1 \end{pmatrix}
+$ \newline
+
+Wobei die Standardskalarprodukte folgendermassen definiert sind:
+
+$\langle a, b \rangle = a^T \circ b = \sum\limits_{i=1}^2 {a_i b_i} = 1 \cdot 1 + 1 \cdot 3 = 4$ \newline
+$\langle a, c \rangle = a^T \circ c = \sum\limits_{i=1}^2 {a_i c_i} = 1 \cdot (-1) + 1 \cdot 3 = 2$ \newline
+$\langle a, d \rangle = a^T \circ d = \sum\limits_{i=1}^2 {a_i d_i} = 1 \cdot (-1.5) + 1 \cdot 1 = -0.5$ \newline
+$\langle a, e \rangle = a^T \circ e = \sum\limits_{i=1}^2 {a_i e_i} = 1 \cdot (-0.5) + 1 \cdot (-1) = -1.5$ \newline
+
+
+
+
+<<vectors, echo=FALSE>>=
+orig <- matrix(c(0,0),ncol=2)
+a <- matrix(c(1,1),ncol=2)
+b <- matrix(c(1,3),ncol=2)
+c <- matrix(c(-1,3),ncol=2)
+d <- matrix(c(-1.5, 1),ncol=2)
+e <- matrix(c(-0.5, -1),ncol=2)
+@
+
+\begin{figure}[H]
+ \center
+<<1stPlot,echo=FALSE, fig=TRUE>>=
+plot(1, type="n", xlim=c(-3.5,3.5), ylim=c(-3,3))
+arrows(orig[1], orig[2], a[1], a[2], length=0.15, angle=30, col=2, lwd=2)
+arrows(orig[1], orig[2], b[1], b[2], length=0.15, angle=30, col=3, lwd=2)
+arrows(orig[1], orig[2], c[1], c[2], length=0.15, angle=30, col=4, lwd=2)
+arrows(orig[1], orig[2], d[1], d[2], length=0.15, angle=30, col=5, lwd=2)
+arrows(orig[1], orig[2], e[1], e[2], length=0.15, angle=30, col=6, lwd=2)
+abline(h=0, col="grey")
+abline(v=0, col="grey")
+text(1,0.7,labels="a", col=2)
+text(1,2.6,labels="b", col=3)
+text(-1,2.6,labels="c", col=4)
+text(-1.4,0.7,labels="d", col=5)
+text(-0.45, -0.6,labels="e", col=6)
+@
+\caption{Vektoren $b$, $c$, $d$ und $e$ sollen auf den Vektor $a$ projeziert werden.}
+\label{fig1.1}
+\end{figure}
+
+
+Nun soll anschaulich betrachtet werden, was die Skalarmultiplikation der Vektoren $b$, $c$, $d$ und $e$ mit $a$ bewirkt. Dazu werden die Vektoren $b$, $c$, $d$ und $e$ mit $a$ bezüglich des Skalarprodukts multipliziert und die Ergebnisse auf der reellen Zahlengerade aufgetragen. Zusätzlich wurde auch der Vektor $a$ mit sich selber bezüglich des Skalarprodukts multipliziert und das Ergebnis als Pfeil ebenfalls auf der rellen Zahlengerade aufgetragen. Die Ergebnisse sind in Fig. \ref{fig1.2} zu betrachten.
+
+\begin{figure}[H]
+ \center
+<<scalarProduct1,echo=FALSE, fig=TRUE>>=
+aa <- a %*% t(a)
+ab <- a %*% t(b)
+ac <- a %*% t(c)
+ad <- a %*% t(d)
+ae <- a %*% t(e)
+plot(1, type="n", xlim=c(-7,7), ylim=c(-1,1))
+arrows(-6,0,6,0, angle=45, length=0.15)
+arrows(0,0,2,0, angle=45, length=0.1, col=2, lwd=2)
+points(ab, 0, col=3, pch=20, cex=1.5)
+points(ac, 0, col=4, pch=20, cex=1.5)
+points(ad, 0, col=5, pch=20, cex=1.5)
+points(ae, 0, col=6, pch=20, cex=1.5)
+points(0,0, pch=3)
+text(0,-0.1,labels="0")
+text(0.5,0.1,labels="a", col=2)
+text(ab,-0.1,labels="b")
+text(ac,-0.1,labels="c")
+text(ad,-0.1,labels="d")
+text(ae,-0.1,labels="e")
+@
+\caption{Skalarprodukt der Vektoren $a$, $b$, $c$, $d$ und $e$ mit $a$ auf der reellen Zahlengerade aufgetragen, wobei die Skalarprodukte von $b$, $c$, $d$ und $e$ mit $a$ als Punkte, das Skalarprodukt von $a$ mit sich selber als Pfeil, eingetragen wurde. Die hier aufgetragenen Längen sind unskaliert, bzw. in Längeneinheiten der Länge von $a$ gemessen.}
+\label{fig1.2}
+\end{figure}
+
+
+\begin{figure}[H]
+ \center
+<<scalarProduct2,echo=FALSE, fig=TRUE>>=
+s <- sqrt(a%*%t(a))[1]
+aa2 <- (a/s) %*% t(a)
+ab2 <- (a/s) %*% t(b)
+ac2 <- (a/s) %*% t(c)
+ad2 <- (a/s) %*% t(d)
+ae2 <- (a/s) %*% t(e)
+plot(1, type="n", xlim=c(-7,7), ylim=c(-1,1))
+arrows(-6,0,6,0, angle=45, length=0.15)
+arrows(0,0,sqrt(2),0, angle=45, length=0.1, col=2, lwd=2)
+points(ab2, 0, col=3, pch=20, cex=1.5)
+points(ac2, 0, col=4, pch=20, cex=1.5)
+points(ad2, 0, col=5, pch=20, cex=1.5)
+points(ae2, 0, col=6, pch=20, cex=1.5)
+points(0,0, pch=3)
+text(0,-0.1,labels="0")
+text(0.5,0.1,labels="a", col=2)
+text(ab2,-0.1,labels="b")
+text(ac2,-0.1,labels="c")
+text(ad2,-0.1,labels="d")
+text(ae2,-0.1,labels="e")
+@
+\caption{Skalarprodukt der Vektoren $a$, $b$, $c$, $d$ und $e$ mit $a$ auf der reellen Zahlengerade aufgetragen, wobei die Skalarprodukte von $b$, $c$, $d$ und $e$ mit $a$ als Punkte, das Skalarprodukt von $a$ mit sich selber als Pfeil, eingetragen wurde. Die hier aufgetragenen Längen sind skaliert. Das heisst, die aufgetragenen Längen entsprechen den richtigen Längen, skaliert durch 1.}
+\label{fig1.2b}
+\end{figure}
+
+
+\begin{figure}[H]
+ \center
+<<2ndPlot, echo=FALSE, fig=TRUE>>=
+plot(1, type="n", xlim=c(-3.5,3.5), ylim=c(-3,3))
+
+abline(a=0, b=1, col="grey")
+arrows(orig[1], orig[2], a[1], a[2], length=0.15, angle=30, col=2, lwd=2)
+
+arrows(orig[1], orig[2], b[1], b[2], length=0.15, angle=30, col=3, lwd=2)
+arrows(orig[1], orig[2], c[1], c[2], length=0.15, angle=30, col=4, lwd=2)
+arrows(orig[1], orig[2], d[1], d[2], length=0.15, angle=30, col=5, lwd=2)
+arrows(orig[1], orig[2], e[1], e[2], length=0.15, angle=30, col=6, lwd=2)
+
+text(1,2.6,labels="b", col=3)
+text(-1,2.6,labels="c", col=4)
+text(-1.4,0.7,labels="d", col=5)
+text(-0.4, -1.1,labels="e", col=6)
+
+b_p <- (ab[1]/(a[1]^2+a[2]^2))*a
+c_p <- (ac[1]/(a[1]^2+a[2]^2))*a
+d_p <- (ad[1]/(a[1]^2+a[2]^2))*a
+e_p <- (ae[1]/(a[1]^2+a[2]^2))*a
+
+lines(c(b[1],b_p[1]), c(b[2],b_p[2]), col="grey")
+lines(c(c[1],c_p[1]), c(c[2],c_p[2]), col="grey")
+lines(c(d[1],d_p[1]), c(d[2],d_p[2]), col="grey")
+lines(c(e[1],e_p[1]), c(e[2],e_p[2]), col="grey")
+
+points(b_p[1], b_p[2], col=3, pch=20, cex=1.5)
+points(c_p[1], c_p[2], col=4, pch=20, cex=1.5)
+points(d_p[1], d_p[2], col=5, pch=20, cex=1.5)
+points(e_p[1], e_p[2], col=6, pch=20, cex=1.5)
+
+text(2,1.8,labels="b'", col=3)
+text(1,0.8,labels="c'", col=4)
+text(-0.45,-0.25,labels="d'", col=5)
+text(-0.95, -0.75,labels="e'", col=6)
+@
+\end{figure}
+
+\end{document}

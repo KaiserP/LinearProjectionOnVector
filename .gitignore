@@ -1,0 +1,14 @@
+# ignore all files ending in *.pdf
+*.pdf
+
+# ignore all files ending in *.tex
+*.tex
+
+# ignore all files ending in *.log
+*.log
+
+# ignore all files ending in *.gz
+*.gz
+
+# ignore all file ending in *.eps
+*.eps
